@@ -77,9 +77,10 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             sql.append(" AND price <= ?");
             parameters.add(maxPrice);
         }
+
         if (color != null && !color.isBlank()) {
-            sql.append(" AND color = ?");
-            parameters.add(color);
+        sql.append(" AND LOWER(color) = LOWER(?)");
+        parameters.add(color.trim());
         }
 
         try (Connection connection = getConnection();
