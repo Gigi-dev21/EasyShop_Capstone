@@ -81,7 +81,8 @@ public class ProductsController
     {
         try
         {
-            productDao.create(product);
+//            productDao.create(product); create() inserts a new row, causing duplicate products.
+            productDao.update(id, product);
         }
         catch(Exception ex)
         {

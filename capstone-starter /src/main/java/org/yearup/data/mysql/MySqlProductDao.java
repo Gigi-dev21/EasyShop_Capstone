@@ -18,7 +18,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         super(dataSource);
     }
 
-    @Override
+
 //    public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color)
 //    {
 //        List<Product> products = new ArrayList<>();
@@ -58,6 +58,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 //
 //        return products;
 //    }
+@Override
     public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color) {
         List<Product> products = new ArrayList<>();
 
