@@ -1,6 +1,8 @@
 package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
@@ -9,6 +11,7 @@ import org.yearup.models.Category;
 import org.yearup.models.Product;
 
 import java.util.List;
+import java.util.Map;
 
 // add the annotations to make this a REST controller
 // add the annotation to make this controller the endpoint for the following url
@@ -88,3 +91,4 @@ public class CategoriesController
         categoryDao.delete(id);
     }
 }
+

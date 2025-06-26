@@ -63,32 +63,57 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         }
     }
 
+    //aded an implemtaion that doesnt allow duplication in catgories
     @Override
     public Category create(Category category)
     {
-        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
+        // Check if a category with the same name already exists
+        String checkSql = "SELECT category_id, name, description FROM categories WHERE name = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
+        try (Connection conn = getConnection())
         {
-            stmt.setString(1, category.getName());
-            stmt.setString(2, category.getDescription());
-
-            stmt.executeUpdate();
-
-            try (ResultSet keys = stmt.getGeneratedKeys())
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql))
             {
-                if (keys.next())
+                checkStmt.setString(1, category.getName());
+
+                try (ResultSet rs = checkStmt.executeQuery())
                 {
-                    category.setCategoryId(keys.getInt(1));
+                    if (rs.next())
+                    {
+                        Category existing = new Category();
+                        existing.setCategoryId(rs.getInt("category_id"));
+                        existing.setName(rs.getString("name"));
+                        existing.setDescription(rs.getString("description"));
+
+                        return existing;
+                    }
                 }
             }
 
-            return category;
+            // If it doesn't exist, insert it
+            String insertSql = "INSERT INTO categories (name, description) VALUES (?, ?)";
+
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS))
+            {
+                insertStmt.setString(1, category.getName());
+                insertStmt.setString(2, category.getDescription());
+
+                insertStmt.executeUpdate();
+
+                try (ResultSet keys = insertStmt.getGeneratedKeys())
+                {
+                    if (keys.next())
+                    {
+                        category.setCategoryId(keys.getInt(1));
+                    }
+                }
+
+                return category;
+            }
         }
         catch (SQLException e)
         {
-            throw new RuntimeException("Error creating category", e);
+            throw new RuntimeException("Error creating or finding category", e);
         }
     }
 
@@ -123,13 +148,20 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
              PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setInt(1, categoryId);
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0)
+            {
+                // No category found with this id
+                throw new RuntimeException("Category with id " + categoryId + " does not exist.");
+            }
         }
         catch (SQLException e)
         {
             throw new RuntimeException("Error deleting category", e);
         }
     }
+
 
     private Category mapRow(ResultSet row) throws SQLException
     {
