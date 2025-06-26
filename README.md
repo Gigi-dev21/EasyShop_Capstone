@@ -70,6 +70,9 @@
     </div>
      <div class="section">
         <h2>Interesting Code</h2>
+       <div class="screenshot">
+            <img src="./capstone-starter%20/src/Image/code.png" alt="Orders Screenshot">
+        </div>
     </div>
     <h2>Technologies Used</h2>
     <ul>
