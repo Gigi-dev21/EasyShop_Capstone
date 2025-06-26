@@ -41,31 +41,31 @@
     <div class="section">
         <h2>🗂Categories Management</h2>
         <div class="screenshot">
-            <img src="src/images/order.png" alt="Categories Screenshot">
+            <img src="./capstone-starter%20/src/Image/CatgoriesReadme.png" alt="Categories Screenshot">
         </div>
     </div>
      <div class="section">
-        <h2>📦 Product Browsing</h2>
+        <h2>📦 Product Management</h2>
         <div class="screenshot">
-            <img src="images/products.png" alt="Products Screenshot">
+            <img src="./capstone-starter%20/src/Image/product.png" alt="Products Screenshot">
         </div>
     </div>
     <div class="section">
-        <h2>🛒 Shopping Cart</h2>
+        <h2>🛒 Shopping Cart Management</h2>
         <div class="screenshot">
-            <img src="images/shopping_cart.png" alt="Shopping Cart Screenshot">
+            <img src="./capstone-starter%20/src/Image/shoppincart.png" alt="Shopping Cart Screenshot">
         </div>
     </div>
     <div class="section">
         <h2>👤 Profile Management</h2>
         <div class="screenshot">
-            <img src="images/profile.png" alt="Profile Screenshot">
+            <img src="./capstone-starter%20/src/Image/profile.png" alt="Profile Screenshot">
         </div>
     </div>
     <div class="section">
         <h2>📑 Order Management</h2>
         <div class="screenshot">
-            <img src="" alt="Orders Screenshot">
+            <img src="./capstone-starter%20/src/Image/order.png" alt="Orders Screenshot">
         </div>
     </div>
     <h2>Technologies Used</h2>
