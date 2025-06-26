@@ -9,18 +9,65 @@
         <li>Secure user authentication with JWT (JSON Web Tokens).</li>
         <li>User registration and login functionality.</li>
     </ul>
-    <h3>Admin Capabilities</h3>
+   <h2>Admin Capabilities</h2>
     <ul>
         <li>Manage product categories: create, update, and delete.</li>
         <li>Manage products: add, update, and delete.</li>
+    <li>View all orders via <code>GET /orders/admin.</code>
+            <span class="tag"> ✅ Additional Feature</span>
+        </li>
+        <li>Update order status via <code>PUT /orders/{orderId}/status.</code>
+            <span class="tag"> ✅ Additional Feature</span>
+        </li>
     </ul>
-    <h3>User Capabilities</h3>
+    <h2>User Capabilities</h2>
     <ul>
         <li>Browse and filter products by price, ID, and other criteria.</li>
-        <li>Add products to a shopping cart.</li>
-        <li>Create orders from cart contents.</li>
-        <li>Clear the shopping cart.</li>
+        <li>Add products to shopping cart.</li>
+        <li>View shopping cart.</li>
+        <li>Update cart item quantities or remove items.</li>
+        <li>Clear shopping cart manually.</li>
+        <li>Create orders from cart contents (checkout).</li>
+        <li>Automatically clear cart after placing an order.</li>
+          <li>View own orders via <code>GET /orders</code>
+            <span class="tag"> ✅ Additional Feature</span>
+        </li>
+        <li>Delete own orders only if status is <code>Pending</code> via <code>DELETE /orders/{orderId}</code>
+            <span class="tag"> ✅ Additional Feature</span>
+        </li>
+        <li>Create and update profile.</li>
+        <li>View own profile.</li>
     </ul>
+    <div class="section">
+        <h2>🗂Categories Management</h2>
+        <div class="screenshot">
+            <img src="src/images/order.png" alt="Categories Screenshot">
+        </div>
+    </div>
+     <div class="section">
+        <h2>📦 Product Browsing</h2>
+        <div class="screenshot">
+            <img src="images/products.png" alt="Products Screenshot">
+        </div>
+    </div>
+    <div class="section">
+        <h2>🛒 Shopping Cart</h2>
+        <div class="screenshot">
+            <img src="images/shopping_cart.png" alt="Shopping Cart Screenshot">
+        </div>
+    </div>
+    <div class="section">
+        <h2>👤 Profile Management</h2>
+        <div class="screenshot">
+            <img src="images/profile.png" alt="Profile Screenshot">
+        </div>
+    </div>
+    <div class="section">
+        <h2>📑 Order Management</h2>
+        <div class="screenshot">
+            <img src="" alt="Orders Screenshot">
+        </div>
+    </div>
     <h2>Technologies Used</h2>
     <ul>
         <li>Java</li>
