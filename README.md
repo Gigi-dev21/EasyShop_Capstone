@@ -41,7 +41,7 @@
     <div class="section">
         <h2>🗂Categories Management</h2>
         <div class="screenshot">
-            <img src="./capstone-starter%20/src/Image/CatgoriesReadme.png" alt="Categories Screenshot">
+            <img src="./capstone-starter%20/src/Image/cat.png" alt="Categories Screenshot">
         </div>
     </div>
      <div class="section">
