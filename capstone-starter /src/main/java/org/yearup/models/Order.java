@@ -16,6 +16,8 @@ public class Order
     private String zip;
     private BigDecimal shippingAmount;
     private List<OrderLineItem> lineItems;
+    private String status = "PENDING";
+
 
     // Getters and setters
 
@@ -45,5 +47,13 @@ public class Order
 
     public List<OrderLineItem> getLineItems() { return lineItems; }
     public void setLineItems(List<OrderLineItem> lineItems) { this.lineItems = lineItems; }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
 

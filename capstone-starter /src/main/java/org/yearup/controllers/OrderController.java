@@ -11,6 +11,7 @@ import org.yearup.models.*;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -106,4 +107,90 @@ public class OrderController {
     }
 
     //New features
+    @GetMapping
+    public ResponseEntity<List<Order>> getUserOrders(Principal principal) {
+        String username = principal.getName();
+        User user = userDao.getByUserName(username);
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        List<Order> orders = orderDao.getOrdersByUserId(user.getId());
+        return ResponseEntity.ok(orders);
+    }
+
+    // Admin only: Get all orders
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Order>> getAllOrders()
+    {
+        try
+        {
+            List<Order> orders = orderDao.getAllOrders();
+            return ResponseEntity.ok(orders);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @PutMapping("/{orderId}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> updateStatus(@PathVariable int orderId, @RequestBody Map<String, String> body) {
+        String newStatus = body.get("status");
+
+        try {
+            Order order = orderDao.getById(orderId);
+            if (order == null) return ResponseEntity.notFound().build();
+
+            order.setStatus(newStatus);
+            orderDao.update(order);
+
+            return ResponseEntity.ok("Status updated to " + newStatus);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not update status");
+        }
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> deleteOrder(@PathVariable int orderId, Principal principal) {
+        try {
+            String username = principal.getName();
+            User user = userDao.getByUserName(username);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "User not found."));
+            }
+
+            Order order = orderDao.getById(orderId);
+            if (order == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Order not found."));
+            }
+
+            // Check if the order belongs to this user
+            if (order.getUserId() != user.getId()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "You can only delete your own orders."));
+            }
+
+            // Only allow deletion if status is "Pending"
+            if (!"Pending".equalsIgnoreCase(order.getStatus())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Only orders with status 'Pending' can be deleted. This order is currently '" + order.getStatus() + "'."));
+            }
+
+            // Delete related order line items first (important for foreign keys)
+            orderLineItemDao.deleteByOrderId(orderId);
+
+            // Delete the order itself
+            orderDao.delete(orderId);
+
+            return ResponseEntity.ok(Map.of("message", "Order deleted successfully."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Could not delete order."));
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ import org.yearup.models.Order;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public class MySqlOrderDao implements OrderDao
@@ -47,5 +48,79 @@ public class MySqlOrderDao implements OrderDao
         order.setOrderId(newOrderId);
 
         return order;
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(int userId) {
+        String sql = "SELECT order_id, user_id, date, address, city, state, zip, shipping_amount, status " +
+                "FROM orders WHERE user_id = ? ORDER BY date DESC";
+
+        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("order_id"));
+            order.setUserId(rs.getInt("user_id"));
+            order.setDate(rs.getTimestamp("date").toLocalDateTime());
+            order.setAddress(rs.getString("address"));
+            order.setCity(rs.getString("city"));
+            order.setState(rs.getString("state"));
+            order.setZip(rs.getString("zip"));
+            order.setShippingAmount(rs.getBigDecimal("shipping_amount"));
+            order.setStatus(rs.getString("status"));
+            return order;
+        });
+    }
+    @Override
+    public List<Order> getAllOrders()
+    {
+        String sql = "SELECT * FROM orders";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("order_id"));
+            order.setUserId(rs.getInt("user_id"));
+            order.setDate(rs.getTimestamp("date").toLocalDateTime());
+            order.setAddress(rs.getString("address"));
+            order.setCity(rs.getString("city"));
+            order.setState(rs.getString("state"));
+            order.setZip(rs.getString("zip"));
+            order.setShippingAmount(rs.getBigDecimal("shipping_amount"));
+            order.setStatus(rs.getString("status"));
+            return order;
+        });
+    }
+    public void update(Order order) {
+        String sql = """
+        UPDATE orders SET
+            status = ?,
+            address = ?, city = ?, state = ?, zip = ?, shipping_amount = ?
+        WHERE order_id = ?
+        """;
+        jdbcTemplate.update(sql,
+                order.getStatus(),
+                order.getAddress(), order.getCity(), order.getState(), order.getZip(),
+                order.getShippingAmount(),
+                order.getOrderId());
+    }
+    public Order getById(int orderId) {
+        String sql = "SELECT * FROM orders WHERE order_id = ?";
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{orderId}, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("order_id"));
+            order.setUserId(rs.getInt("user_id"));
+            order.setDate(rs.getTimestamp("date").toLocalDateTime());
+            order.setAddress(rs.getString("address"));
+            order.setCity(rs.getString("city"));
+            order.setState(rs.getString("state"));
+            order.setZip(rs.getString("zip"));
+            order.setShippingAmount(rs.getBigDecimal("shipping_amount"));
+            order.setStatus(rs.getString("status")); // Include status
+            return order;
+        });
+    }
+@Override
+    public void delete(int orderId) {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        jdbcTemplate.update(sql, orderId);
     }
 }

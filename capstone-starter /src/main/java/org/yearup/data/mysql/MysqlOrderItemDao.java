@@ -32,5 +32,11 @@ public class MysqlOrderItemDao implements OrderLineItemDao
                 item.getDiscount()
         );
     }
+
+    @Override
+    public void deleteByOrderId(int orderId) {
+        String sql = "DELETE FROM order_line_items WHERE order_id = ?";
+        jdbcTemplate.update(sql, orderId);
+    }
 }
 

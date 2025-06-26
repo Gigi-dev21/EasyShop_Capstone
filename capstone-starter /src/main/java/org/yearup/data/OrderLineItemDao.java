@@ -4,4 +4,5 @@ import org.yearup.models.OrderLineItem;
 
 public interface OrderLineItemDao {
     void create(OrderLineItem orderLineItem);
+    void deleteByOrderId(int orderId);
 }
