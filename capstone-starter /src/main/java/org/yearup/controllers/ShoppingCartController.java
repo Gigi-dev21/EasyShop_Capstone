@@ -2,6 +2,7 @@ package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,7 +40,7 @@ public class ShoppingCartController
     // each method in this controller requires a Principal object as a parameter
     // GET /cart - Get current user's shopping cart
     @GetMapping
-    public ShoppingCart getCart(Principal principal)
+    public ResponseEntity<?> getCart(Principal principal)
     {
         try
         {
@@ -50,7 +51,8 @@ public class ShoppingCartController
             if (user == null)
             {
                 System.out.println("User not found for username: " + username);
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "User not found."));
             }
 
             int userId = user.getId();
@@ -64,16 +66,13 @@ public class ShoppingCartController
                 cart = new ShoppingCart(); // create empty cart to avoid 500
             }
 
-            return cart;
-        }
-        catch (ResponseStatusException ex)
-        {
-            throw ex;
+            return ResponseEntity.ok(cart);
         }
         catch (Exception e)
         {
             e.printStackTrace(); // logs error in server console
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not retrieve shopping cart.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Could not retrieve shopping cart."));
         }
     }
 
@@ -81,20 +80,23 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     // POST /cart/products/{productId} - Add product to cart or increase quantity by 1
     @PostMapping("/products/{productId}")
-    public void addToCart(@PathVariable int productId, Principal principal)
+    public ResponseEntity<?> addToCart(@PathVariable int productId, Principal principal)
     {
         try
         {
             String username = principal.getName();
             User user = userDao.getByUserName(username);
-            if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.");
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "User not found."));
 
             int userId = user.getId();
 
             // Check if product exists in DB
             if (productDao.getById(productId) == null)
             {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "Product not found."));
             }
 
             ShoppingCartItem existingItem = shoppingCartDao.getItem(userId, productId);
@@ -102,20 +104,20 @@ public class ShoppingCartController
             if (existingItem == null)
             {
                 shoppingCartDao.addItem(userId, productId, 1);
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(Map.of("message", "Product added to cart."));
             }
             else
             {
                 int newQuantity = existingItem.getQuantity() + 1;
                 shoppingCartDao.updateQuantity(userId, productId, newQuantity);
+                return ResponseEntity.ok(Map.of("message", "Product quantity increased by 1."));
             }
-        }
-        catch (ResponseStatusException ex)
-        {
-            throw ex;
         }
         catch (Exception e)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not add item to cart.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Could not add item to cart."));
         }
     }
 
@@ -123,20 +125,24 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("/products/{productId}")
-    public void updateCartItem(@PathVariable int productId, @RequestBody Map<String, Integer> body, Principal principal)
+    public ResponseEntity<?> updateCartItem(@PathVariable int productId, @RequestBody Map<String, Integer> body, Principal principal)
     {
         try
         {
             if (!body.containsKey("quantity"))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing 'quantity' in request body.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Missing 'quantity' in request body."));
 
             int quantity = body.get("quantity");
             if (quantity < 0)
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be zero or greater.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Quantity must be zero or greater."));
 
             String username = principal.getName();
             User user = userDao.getByUserName(username);
-            if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.");
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "User not found."));
 
             int userId = user.getId();
 
@@ -148,25 +154,24 @@ public class ShoppingCartController
                 {
                     // Remove item if quantity set to 0
                     shoppingCartDao.updateQuantity(userId, productId, 0);
-                    // Or you can create a separate removeItem method to delete the row entirely if needed
+                    return ResponseEntity.ok(Map.of("message", "Product removed from cart."));
                 }
                 else
                 {
                     shoppingCartDao.updateQuantity(userId, productId, quantity);
+                    return ResponseEntity.ok(Map.of("message", "Product quantity updated."));
                 }
             }
             else
             {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found in cart.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("message", "Item not found in cart."));
             }
-        }
-        catch (ResponseStatusException ex)
-        {
-            throw ex;
         }
         catch (Exception e)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update item.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Could not update item."));
         }
     }
 
@@ -174,20 +179,25 @@ public class ShoppingCartController
     // https://localhost:8080/cart
     // DELETE /cart - Clear the entire cart
     @DeleteMapping
-    public void clearCart(Principal principal)
+    public ResponseEntity<?> clearCart(Principal principal)
     {
         try
         {
             String username = principal.getName();
             User user = userDao.getByUserName(username);
-            if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.");
+            if (user == null)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "User not found."));
 
             int userId = user.getId();
             shoppingCartDao.clearCart(userId);
+
+            return ResponseEntity.ok(Map.of("message", "Shopping cart cleared."));
         }
         catch (Exception e)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not clear shopping cart.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Could not clear shopping cart."));
         }
     }
 }
