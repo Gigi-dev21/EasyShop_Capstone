@@ -21,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/cart")
 @PreAuthorize("isAuthenticated()")
+@CrossOrigin
 public class ShoppingCartController
 {
     // a shopping cart requires
