@@ -68,6 +68,9 @@
             <img src="./capstone-starter%20/src/Image/order.png" alt="Orders Screenshot">
         </div>
     </div>
+     <div class="section">
+        <h2>Interesting Code</h2>
+    </div>
     <h2>Technologies Used</h2>
     <ul>
         <li>Java</li>
