@@ -81,6 +81,14 @@
   <li>Handling errors and returning <strong>500 Internal Server Error</strong> with details.</li>
 </ul>
 <p>This shows how <code>ResponseEntity</code> helps make API responses clear and helpful for users calling the API. <span class="tag"> ✅ Additional Feature</span></p>
+           <div class="section">
+        <h2>Frontend Screenshots</h2>
+       <div class="screenshot">
+            <img src="./capstone-starter%20/src/Image/sc1.png" alt="Orders Screenshot">
+              <img src="./capstone-starter%20/src/Image/sc2.png" alt="Orders Screenshot">
+   <img src="./capstone-starter%20/src/Image/sc3.png" alt="Orders Screenshot">
+        </div>
+    </div>
     <h2>💻 Technologies Used</h2>
     <ul>
         <li>Java</li>
