@@ -74,14 +74,6 @@
             <img src="./capstone-starter%20/src/Image/code.png" alt="Orders Screenshot">
         </div>
     </div>
-    <div class="section">
-        <h2>Frontend ScreenShot</h2>
-       <div class="screenshot">
-            <img src="./capstone-starter%20/src/Image/sc1.png" alt="Orders Screenshot">
- <img src="./capstone-starter%20/src/Image/sc2.png" alt="Orders Screenshot">
- <img src="./capstone-starter%20/src/Image/sc3.png" alt="Orders Screenshot">
-        </div>
-    </div>
     <h2>Technologies Used</h2>
     <ul>
         <li>Java</li>
