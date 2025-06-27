@@ -3,7 +3,7 @@
     <p>
         Easy Shop is an e-commerce application featuring a frontend interface, with a primary focus on developing and enhancing robust backend APIs.
     </p>
-    <h2>Key Features</h2>
+    <h2>🔑 Key Features</h2>
     <h3>Authentication & Security</h3>
     <ul>
         <li>Secure user authentication with JWT (JSON Web Tokens).</li>
@@ -69,12 +69,19 @@
         </div>
     </div>
      <div class="section">
-        <h2>Interesting Code</h2>
+        <h2>✨ Interesting Code</h2>
        <div class="screenshot">
             <img src="./capstone-starter%20/src/Image/code.png" alt="Orders Screenshot">
         </div>
-    </div>
-    <h2>Technologies Used</h2>
+         <h3>Why this code is interesting:</h3>
+<p>This code uses <code>ResponseEntity</code> to easily manage HTTP responses by:</p>
+<ul>
+  <li>Returning <strong>404 Not Found</strong> with a clear message if the product doesn’t exist.</li>
+  <li>Sending <strong>200 OK</strong> with a success message when the product is updated.</li>
+  <li>Handling errors and returning <strong>500 Internal Server Error</strong> with details.</li>
+</ul>
+<p>This shows how <code>ResponseEntity</code> helps make API responses clear and helpful for users calling the API. <span class="tag"> ✅ Additional Feature</span></p>
+    <h2>💻 Technologies Used</h2>
     <ul>
         <li>Java</li>
         <li>Spring Boot</li>
