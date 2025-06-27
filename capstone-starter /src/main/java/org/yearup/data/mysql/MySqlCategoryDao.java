@@ -144,21 +144,15 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     {
         String sql = "DELETE FROM categories WHERE category_id = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql))
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql))
         {
-            stmt.setInt(1, categoryId);
-            int affectedRows = stmt.executeUpdate();
-
-            if (affectedRows == 0)
-            {
-                // No category found with this id
-                throw new RuntimeException("Category with id " + categoryId + " does not exist.");
-            }
+            statement.setInt(1, categoryId);
+            statement.executeUpdate();
         }
         catch (SQLException e)
         {
-            throw new RuntimeException("Error deleting category", e);
+            throw new RuntimeException(e);
         }
     }
 
